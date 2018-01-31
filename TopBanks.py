@@ -6,87 +6,65 @@ from openpyxl import Workbook
 
 
 def get_otziv_info():
+    elements = []
     URL = 'http://topbanki.ru/banks/sbrf/'
     response = requests.get(URL)
+    # otziv_text = soup.find_all('p')
     soup = bs.BeautifulSoup(response.text, 'lxml')
-    otziv_text = soup.find_all('p')
-    # print(len(otziv_text))
-    otziv_text = otziv_text[1:-2]
-    n = 2
-    while n < 4:
-        response = requests.get(URL + 'page' + str(n))
-        soup = bs.BeautifulSoup(response.text, 'lxml')
-        otziv_text1 = soup.find_all('p')
-        otziv_text1 = otziv_text1[:-2]
-        for el in otziv_text1:
-            otziv_text.append(el)
+    otziv_group = soup.find_all('div', class_='response_table__data')
+    for otziv in otziv_group:
+        group = []
+        text = otziv.find('p').text
+        time = otziv.find('li').text
+        if (otziv.find('div', class_='office') == None):
+            office = "-"
+        else:
+            office1 = otziv.find('div', class_='office')
+            office = office1.find(class_='mr10').text
 
-        n = n + 1
-
-    return otziv_text
-
-a = get_otziv_info()
-#print(a)
-
-def get_otziv_time():
-    otziv_data = []
-    URL = 'http://topbanki.ru/banks/sbrf/'
-    response = requests.get(URL)
-    soup = bs.BeautifulSoup(response.text, 'lxml')
-    dates = soup.find_all(class_='actions')
-    a = soup.find_all('ul', {'class': 'actions'})
-    for el in a:
-        data = el.text
-        otziv_data.append(data)
-        ##print(el.text)
+        if (otziv.find('div', class_='author') == None):
+            cat = "-"
+        else:
+            category = otziv.find('div', class_='author')
+            cat = category.find('span', class_='tag-mini mr10').text
+        group.append(text)
+        group.append(time)
+        group.append(office)
+        group.append(cat)
+        elements.append(group)
 
     n = 2
-    while n < 4:
+    while n < 3:
+        URL = 'http://topbanki.ru/banks/sbrf/'
         response = requests.get(URL + 'page' + str(n))
         soup = bs.BeautifulSoup(response.text, 'lxml')
-        dates = soup.find_all(class_='actions')
-        a = soup.find_all('ul', {'class': 'actions'})
-        for el in a:
-            data = el.text
-            otziv_data.append(data)
+        otziv_group = soup.find_all('div', class_='response_table__data')
+        for otziv in otziv_group:
+            group = []
+            text = otziv.find('p').text
+            time = otziv.find('li').text
+            if (otziv.find('div', class_='office') == None):
+                office = "-"
+            else:
+                office1 = otziv.find('div', class_='office')
+                office = office1.find(class_='mr10').text
 
-        n = n + 1
-    return otziv_data
-b = get_otziv_time()
-#print(b)
-
-data = {'text': get_otziv_info()}
-
-df = pd.DataFrame(data)
-df.index = get_otziv_time()
-#print(df)
-
-def get_otziv_category():
-    URL = 'http://topbanki.ru/banks/sbrf/'
-    count = 0
-    response = requests.get(URL)
-    soup = bs.BeautifulSoup(response.text, 'lxml')
-    otziv_category = []
-    a = soup.find_all('span', class_='tag-mini mr10')
-    for el in a:
-        category = el.text
-        otziv_category.append(category)
-        count = count + 1
-
-    n = 2
-    while n < 4:
-        response = requests.get(URL + 'page' + str(n))
-        soup = bs.BeautifulSoup(response.text, 'lxml')
-        a = soup.find_all('span', class_='tag-mini mr10')
-        for el in a:
-            category = el.text
-            otziv_category.append(category)
-            count = count + 1
-
+            if (otziv.find('div', class_='author') == None):
+                cat = "-"
+            else:
+                category = otziv.find('div', class_='author')
+                cat = category.find('span', class_='tag-mini mr10').text
+            group.append(text)
+            group.append(time)
+            group.append(office)
+            group.append(cat)
+            elements.append(group)
         n = n + 1
 
-    return otziv_category, count
+    return elements
+elements = get_otziv_info()
 
-
-c = get_otziv_category()
-#print(c)
+array = np.array(elements)
+df = pd.DataFrame(array)
+#df = df.append(elements)
+print(df)
