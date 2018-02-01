@@ -1,8 +1,9 @@
 import requests
 import bs4 as bs
 import pandas as pd
+from pandas import ExcelWriter
+import xlsxwriter as xw
 import numpy as np
-from openpyxl import Workbook
 
 
 class TopBanks:
@@ -15,20 +16,20 @@ class TopBanks:
         for otziv in otziv_group:
             group = []
             text = otziv.find('p').text
-            #time = otziv.find('li').text
+            # time = otziv.find('li').text
             if (otziv.find('div', class_='office') == None):
-                office = "-"
+                office = "None"
             else:
                 office1 = otziv.find('div', class_='office')
                 office = office1.find(class_='mr10').text
 
             if (otziv.find('div', class_='author') == None):
-                cat = "-"
+                cat = "None"
             else:
                 category = otziv.find('div', class_='author')
                 cat = category.find('span', class_='tag-mini mr10').text
             group.append(text)
-            #group.append(time)
+            # group.append(time)
             group.append(office)
             group.append(cat)
             elements.append(group)
@@ -42,20 +43,20 @@ class TopBanks:
             for otziv in otziv_group:
                 group = []
                 text = otziv.find('p').text
-                #time = otziv.find('li').text
+                # time = otziv.find('li').text
                 if (otziv.find('div', class_='office') == None):
-                    office = "-"
+                    office = "None"
                 else:
                     office1 = otziv.find('div', class_='office')
                     office = office1.find(class_='mr10').text
 
                 if (otziv.find('div', class_='author') == None):
-                    cat = "-"
+                    cat = "None"
                 else:
                     category = otziv.find('div', class_='author')
                     cat = category.find('span', class_='tag-mini mr10').text
                 group.append(text)
-                #group.append(time)
+                # group.append(time)
                 group.append(office)
                 group.append(cat)
                 elements.append(group)
@@ -90,10 +91,24 @@ class TopBanks:
         return otziv_data
 
     time = get_otziv_time()
-    elements = get_otziv_info()
+    otzivi = get_otziv_info()
 
-    #data = {'text': get_otziv_info()}
+    # data = {'text': get_otziv_info()}
 
-    df = pd.DataFrame(elements)
+    df = pd.DataFrame(otzivi)
     df.index = get_otziv_time()
-    print(df)
+    df.columns = ['Текст Отзыва', 'Место', 'Категория']
+    df.index.names = ['Дата']
+    #bla = list(df)
+
+    #print(df)
+
+    writer = ExcelWriter('TopBanks.xlsx')
+    df.to_excel(writer, 'Отзывы')
+    writer.save()
+
+    workbook = xw.Workbook('TopBanks.xlsx')
+    worksheet = workbook.get_worksheet_by_name('Отзывы')
+
+
+
