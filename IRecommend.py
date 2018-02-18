@@ -1,24 +1,26 @@
 import requests
 import bs4 as bs
+import time
 from openpyxl import Workbook
 
 class IRecommend:
-    def get_otziv_link():
+    def get_feedback_link():
         URL = 'http://irecommend.ru'
-        otziv_links = []
+        feedback_links = []
         count = 0
         response = requests.get('http://irecommend.ru/content/sberbank?new=1')
         soup = bs.BeautifulSoup(response.text, 'lxml')
-        otzivi_group = soup.find_all('div', class_='nobr')
-        for otziv_link in otzivi_group:
-            for link in otziv_link.find_all('a'):
-                otziv_links.append(URL + link['href'])
+        feedback_group = soup.find_all('div', class_='nobr')
+        for feedback_link in feedback_group:
+            for link in feedback_link.find_all('a'):
+                feedback_links.append(URL + link['href'])
                 count = count + 1
         print(count)
 
-        return otziv_links
+        return feedback_links
 
 
-    links = get_otziv_link()
-    print(links)
+    links = get_feedback_link()
+    #print(links)
+
 

@@ -90,13 +90,13 @@ class TopBanks:
             n = n + 1
         return time
 
-    def get_right_time(time):
+    def get_right_time(time_list):
         now_date = datetime.date.today()
         now = now_date.strftime("%d %B %Y")
         delta = datetime.timedelta(days=1)
         yesterday_date = now_date - delta
         right_time = []
-        for el in time:
+        for el in time_list:
             el = el.replace('Сегодня в', now)
             el = el.replace('Вчера в', yesterday_date.strftime("%d %B %Y"))
             el = el.replace('January', 'января')
