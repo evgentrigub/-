@@ -21,7 +21,7 @@ def get_proxy_list():
 
 def get_proxy(proxy_list):
     for proxy in proxy_list:
-        url_try_to_get = url = "http://otzovik.com/"
+        url_try_to_get = "https://yandex.ru/"
         url = "http://" + proxy
         print(url)
         proxies = {
