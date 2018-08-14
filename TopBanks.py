@@ -3,9 +3,7 @@ import requests
 import bs4 as bs
 import pandas as pd
 from pandas import ExcelWriter
-import xlsxwriter as xw
 import openpyxl
-import numpy as np
 
 
 class TopBanks:

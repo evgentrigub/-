@@ -4,12 +4,11 @@ import time
 from openpyxl import Workbook
 
 
-
 class Otzovik:
 
     def get_feedback_link():
         feedback_links = []
-        URL = 'https://otzovik.com/reviews/sberbank_rossii/order_date_desc/'
+        URL = 'https://otzovik.com/reviews/strahovaya_kompaniya_ingosstrah_russia_moscow/order_date_desc/'
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36"}
         # proxy_list = Proxy.get_proxy_list()
